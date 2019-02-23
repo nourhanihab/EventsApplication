@@ -15,7 +15,7 @@
         twoHoursLater = twoHoursLater.toISOString();
         // Google api console clientID and apiKey 
         var clientId = '85551610466-9nibuhnnjbt8h3abcpts1mufrrid5jhc.apps.googleusercontent.com';
-        var apiKey = 'AIzaSyDXl6GJmE797p8_shIdl0qlel7_XOQV4xc';
+        var apiKey = 'AIzaSyBAgC0_5NbcLSY8yx3cyxIfpKGPUGJHQLw';
         // eventful apiKey
         var app_key='tsmSrWDP8rXTXXcb';
         // enter the scope of current project (this API must be turned on in the Google console)
@@ -99,7 +99,7 @@
                  
                     var eventsList = document.getElementById("eventsList");
                     
-                    data.events.event.slice(0, 1).forEach(function(element) {   
+                    data.events.event.slice(0, 1).forEach(function(element) { 
                     eventsList.insertAdjacentHTML( 'beforeend',"<li>" + element.title + " : " + element.city_name+" </li>");
                     var dayOfevent=year+'-'+month+'-'+day+'T09:00:00-07:00';
                     var resource = {
@@ -135,43 +135,85 @@
         }
                 
         // FUNCTION TO DELETE EVENT
-       function deleteEvent() {
+       function deleteEvent(event_title) {
         $(document).ready(function(){
             $.ajax({
-                url: 'https://www.googleapis.com/calendar/v3/calendars/yosraradwan99@gmail.com/events',
+                url: 'https://www.googleapis.com/calendar/v3/calendars/yosraradwan99@gmail.com/events?key=' + apiKey,
                 type: 'GET',
                 crossDomain: true,
                 dataType: 'jsonp',
                 success: function(data) {
                  alert("Success");
-                 
-                    var eventsList = document.getElementById("eventsList");
-                    
-                    data.forEach(function(element) {   
-                    eventsList.insertAdjacentHTML( 'beforeend',"<li>" + element.summary + " : " + element.id+" </li>");
-                    });   
+                    data.items.forEach(function(element) {   
+                        my_json = element;
+                        if(element.summary==event_title){
+                             gapi.client.load('calendar', 'v3', function() {
+                            var request = gapi.client.calendar.events.delete({
+                                'calendarId': 'yosraradwan99@gmail.com',
+                                'eventId': element.id
+                            });
+                            request.execute(function(response) {
+                                if(response.error || response == false){
+                                    alert('Error');
+                                }
+                                else{
+                                    alert('Delete Success');
+                                    location.reload();               
+                                }
+                            });
+                        });
+                        }//end of loop for all events
+                    });
                     //console.log(data);
-                
-                },
+                },//end of success case
+                    error: function() { alert('Failed!'); }
+                })// end 
+        });// end of  $(document).ready(function()
+       } 
+        // FUNCTION TO UPDATE EVENT
+       function updateEvent(event_title,newLocation) {
+        $(document).ready(function(){
+            $.ajax({
+                url: 'https://www.googleapis.com/calendar/v3/calendars/yosraradwan99@gmail.com/events?key=' + apiKey,
+                type: 'GET',
+                crossDomain: true,
+                dataType: 'jsonp',
+                success: function(data) {
+                 alert("Success");
+                    data.items.forEach(function(element) {
+                        console.log(element);   
+                        if(element.summary==event_title){
+                            var event = element;
+                            // Example showing a change in the location
+                            event.location = newLocation;
+                            console.log(event.location);
+                            gapi.client.load('calendar', 'v3', function() {
+                            var request = gapi.client.calendar.events.update({
+                                'calendarId': 'yosraradwan99@gmail.com',
+                                'eventId': element.id,
+                                'resource': event
+                            });
+
+                            request.execute(function(response) {
+                                if(response.error || response == false){
+                                    console.log("++"+response);
+                                    alert('Error');
+                                }
+                                else{
+                                    alert('Update Success');
+                                    location.reload();               
+                                }
+                            });
+                            });
+                    }//end of if condition
+
+                    });//end of loop for all events
+                    //console.log(data);
+                },//end of success case
                     error: function() { alert('Failed!'); }
                 })
         });
-         // gapi.client.load('calendar', 'v3', function() {  
-         //   var request = gapi.client.calendar.events.delete({
-         //     'calendarId': 'yosraradwan99@gmail.com',
-         //     'eventId': 'ajb86ek6tfrnq594qp3u9s7t7c'
-         //   });
-         // request.execute(function(resp) {
-         //    if (resp.status == 'confirmed') {
-         //        alert("Event was successfully removed from the calendar!");
-         //    }
-         //    else{
-         //        console.log(resp)
-         //        alert('An error occurred, please try again later.')
-         //    }
-         // });
-         // });
-       } 
+       }
  
         </script>
     <script src="https://apis.google.com/js/client.js?onload=handleClientLoad" type="text/javascript"></script>
@@ -219,17 +261,22 @@
                     </div>
                 </div>
                        <!--  <input id="txtEventDetails" type="text" /> -->
-                <button id="btnCreateEvents" class="btn btn-primary" >
-                    Create Events</button>  
-                <button id="btnDeleteEvents" class="btn btn-primary" onclick="deleteEvent();">
-                    Delete Events</button>
+                
+                Name of event to be delete: <input type="text" name="event_title" id="event_title" placeholder="event title">     
+                <button id="btnDeleteEvents" class="btn btn-primary" onclick="deleteEvent(document.getElementById('event_title').value);">
+                    Delete Events</button><br><br>
+                Name of event to be update: <input type="text" name="event_title1" id="event_title1" placeholder="event title">
+                New Location for event: <input type="text" name="newLocation" id="newLocation" placeholder="New Location">     
+                <button id="btnUpdateEvents" class="btn btn-primary" onclick="updateEvent(document.getElementById('event_title1').value,document.getElementById('newLocation').value);">
+                    Update Events</button><br><br>
 
-
-                Date: <input type="text" name="day" id="day" placeholder="DD"><input type="text" name="month" id="month" placeholder="MM"><input type="text" name="year" id="year" placeholder="YYYY"><br>
+                Date: <input type="text" name="day" id="day" placeholder="DD"><input type="text" name="month" id="month" placeholder="MM"><input type="text" name="year" id="year" placeholder="YYYY">
             
                 <button id="btnShowEvents" class="btn btn-primary" onclick="showEvent(document.getElementById('year').value,
                 document.getElementById('month').value,document.getElementById('day').value);">
                     Show Events</button>
+                 <button id="btnCreateEvents" class="btn btn-primary" >
+                    Create Events</button> <br>   
                 <div id="event-response">
                  <h1>New Events: </h1>
                     <div id="events">
