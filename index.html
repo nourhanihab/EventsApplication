@@ -181,12 +181,12 @@
                 success: function(data) {
                  alert("Success");
                     data.items.forEach(function(element) {
-                        console.log(element);   
+                           
                         if(element.summary==event_title){
                             var event = element;
                             // Example showing a change in the location
                             event.location = newLocation;
-                            console.log(event.location);
+                            
                             gapi.client.load('calendar', 'v3', function() {
                             var request = gapi.client.calendar.events.update({
                                 'calendarId': 'yosraradwan99@gmail.com',
@@ -194,9 +194,9 @@
                                 'resource': event
                             });
 
+
                             request.execute(function(response) {
                                 if(response.error || response == false){
-                                    console.log("++"+response);
                                     alert('Error');
                                 }
                                 else{
