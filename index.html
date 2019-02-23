@@ -10,6 +10,7 @@
     
     <script type="text/javascript">
         var now = new Date();
+        var eventtitle="";
         today = now.toISOString();
         var twoHoursLater = new Date(now.getTime() + (2 * 1000 * 60 * 60));
         twoHoursLater = twoHoursLater.toISOString();
@@ -67,7 +68,7 @@
             gapi.client.load('calendar', 'v3', function () {                    // load the calendar api (version 3)
                 var request = gapi.client.calendar.events.insert
                 ({
-                    'calendarId': 'yosraradwan99@gmail.com', // calendar ID
+                    'calendarId': 'nohawally7@gmail.com', // calendar ID
                     "resource": resource                            // pass event details with api call
                 });
                 
@@ -88,6 +89,7 @@
         function showEvent(year,month,day) {            
             var date = year+month+day+'00-'+year+month+day+'00';
             var myObj, i, j, x = "";
+            
             $(document).ready(function(){
             $.ajax({
                 url: 'http://api.eventful.com/json/events/search?app_key='+app_key+'&location=egypt&date='+date,
@@ -102,6 +104,7 @@
                     data.events.event.slice(0, 1).forEach(function(element) { 
                     eventsList.insertAdjacentHTML( 'beforeend',"<li>" + element.title + " : " + element.city_name+" </li>");
                     var dayOfevent=year+'-'+month+'-'+day+'T09:00:00-07:00';
+                    eventtitle += element.title;
                     var resource = {
                     "summary": element.title,
                     "start": {
@@ -125,20 +128,41 @@
                    // document.body.appendChild(btn);
                    // btn.onclick = function() { // Note this is a function
                    // makeApiCall(resource);};
-                    }); // end of forEach     
+                    }
+   
+   
+                ); // end of forEach     
                     console.log(data);
-                
+                    jsonFlickrApi(rsp);
                 },
                     error: function() { alert('Failed!'); }
                 })
             })
         }
-                
+    function jsonFlickrApi(rsp) {
+    window.rsp = rsp;
+    var s = "";
+    // http://farm{id}.static.flickr.com/{server-id}/{id}_{secret}_[mstb].jpg
+    // http://www.flickr.com/photos/{user-id}/{photo-id}
+    
+    
+    for (var i=0; i < rsp.photos.photo.length; i++) {
+      photo = rsp.photos.photo[i];
+      t_url = "http://farm" + photo.farm + ".static.flickr.com/" + 
+        photo.server + "/" + photo.id + "_" + photo.secret + "_" + "t.jpg";
+      p_url = "http://www.flickr.com/photos/" + photo.owner + "/" + photo.id;
+      s +=  '<a href="' + p_url + '">' + '<img alt="'+ photo.title + 
+        '"src="' + t_url + '"/>' + '</a>';
+    }
+    document.writeln(s);
+    window.console(s);
+  }  
+             
         // FUNCTION TO DELETE EVENT
        function deleteEvent(event_title) {
         $(document).ready(function(){
             $.ajax({
-                url: 'https://www.googleapis.com/calendar/v3/calendars/yosraradwan99@gmail.com/events?key=' + apiKey,
+                url: 'https://www.googleapis.com/calendar/v3/calendars/nohawally7@gmail.com/events?key=' + apiKey,
                 type: 'GET',
                 crossDomain: true,
                 dataType: 'jsonp',
@@ -149,7 +173,7 @@
                         if(element.summary==event_title){
                              gapi.client.load('calendar', 'v3', function() {
                             var request = gapi.client.calendar.events.delete({
-                                'calendarId': 'yosraradwan99@gmail.com',
+                                'calendarId': 'nohawally7@gmail.com',
                                 'eventId': element.id
                             });
                             request.execute(function(response) {
@@ -174,7 +198,7 @@
        function updateEvent(event_title,newLocation) {
         $(document).ready(function(){
             $.ajax({
-                url: 'https://www.googleapis.com/calendar/v3/calendars/yosraradwan99@gmail.com/events?key=' + apiKey,
+                url: 'https://www.googleapis.com/calendar/v3/calendars/nohawally7@gmail.com/events?key=' + apiKey,
                 type: 'GET',
                 crossDomain: true,
                 dataType: 'jsonp',
@@ -189,7 +213,7 @@
                             
                             gapi.client.load('calendar', 'v3', function() {
                             var request = gapi.client.calendar.events.update({
-                                'calendarId': 'yosraradwan99@gmail.com',
+                                'calendarId': 'nohawally7@gmail.com',
                                 'eventId': element.id,
                                 'resource': event
                             });
@@ -285,10 +309,11 @@
                     </div>   
                 </div>
                 <div id="divifm">
-                    <iframe src="https://calendar.google.com/calendar/embed?src=yosraradwan99%40gmail.com&ctz=Africa%2FCairo" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+                    <iframe src="https://calendar.google.com/calendar/embed?src=nohawally7%40gmail.com&ctz=Africa%2FCairo" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
                 </div>
             </div>
         </div>
     </div>
+<script src="http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=f018661ad69c5d52b0f39f7b39da03bf&tags=lion&per_page=5&format=json"> </script>
 </body>
 </html>
