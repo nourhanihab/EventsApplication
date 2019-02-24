@@ -26,10 +26,12 @@
             gapi.client.setApiKey(apiKey);
             window.setTimeout(checkAuth, 1);
         }
+       
         function checkAuth() {
             gapi.auth.authorize({ client_id: clientId, scope: scopes, immediate: true }, handleAuthResult);
         }
         // show/hide the 'authorize' button, depending on application state
+        
         function handleAuthResult(authResult) {
             var authorizeButton = document.getElementById('authorize-button');
             var eventButton = document.getElementById('btnCreateEvents');
@@ -55,6 +57,7 @@
             gapi.auth.authorize({ client_id: clientId, scope: scopes, immediate: false }, handleAuthResult);
             return false;
         }
+        
         function refreshICalendarframe() {
             var iframe = document.getElementById('divifm')
             iframe.innerHTML = iframe.innerHTML;
@@ -71,7 +74,7 @@
                     'calendarId': 'nohawally7@gmail.com', // calendar ID
                     "resource": resource                            // pass event details with api call
                 });
-                
+                 
                 // handle the response from our api call
                 request.execute(function (resp) {
                     if (resp.status == 'confirmed') {
@@ -85,6 +88,7 @@
                 });
             });
         }
+        
         // FUNCTION TO SHOW EVENT
         function showEvent(year,month,day) {            
             var date = year+month+day+'00-'+year+month+day+'00';
@@ -104,7 +108,6 @@
                     data.events.event.slice(0, 1).forEach(function(element) { 
                     eventsList.insertAdjacentHTML( 'beforeend',"<li>" + element.title + " : " + element.city_name+" </li>");
                     var dayOfevent=year+'-'+month+'-'+day+'T09:00:00-07:00';
-                    eventtitle += element.title;
                     var resource = {
                     "summary": element.title,
                     "start": {
@@ -130,7 +133,7 @@
                    // makeApiCall(resource);};
                     }
    
-   
+                 
                 ); // end of forEach     
                     console.log(data);
                     jsonFlickrApi(rsp);
@@ -139,24 +142,8 @@
                 })
             })
         }
-    function jsonFlickrApi(rsp) {
-    window.rsp = rsp;
-    var s = "";
-    // http://farm{id}.static.flickr.com/{server-id}/{id}_{secret}_[mstb].jpg
-    // http://www.flickr.com/photos/{user-id}/{photo-id}
-    
-    
-    for (var i=0; i < rsp.photos.photo.length; i++) {
-      photo = rsp.photos.photo[i];
-      t_url = "http://farm" + photo.farm + ".static.flickr.com/" + 
-        photo.server + "/" + photo.id + "_" + photo.secret + "_" + "t.jpg";
-      p_url = "http://www.flickr.com/photos/" + photo.owner + "/" + photo.id;
-      s +=  '<a href="' + p_url + '">' + '<img alt="'+ photo.title + 
-        '"src="' + t_url + '"/>' + '</a>';
-    }
-    document.writeln(s);
-    window.console(s);
-  }  
+       
+ 
              
         // FUNCTION TO DELETE EVENT
        function deleteEvent(event_title) {
@@ -239,31 +226,67 @@
         });
        }
  
+        
+        // Create your own event
+//        function createEvent(event_title, newlocation){
+//        var event = {
+//          'summary': event_title,
+//          'location': newlocation,
+//          'start': {
+//            'dateTime': dayOfevent,
+//          },
+//          'end': {
+//            'dateTime': dayOfevent;
+//          }
+//        };
+//
+//        var request = gapi.client.calendar.events.insert({
+//          'calendarId': 'nohawally7@gmail.com',
+//          'resource': event
+//        });
+//
+//        request.execute(function(event) {
+//          appendPre('Event created: ' + event.htmlLink);
+//        });
+//        }
+//        
+             $.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=8452b4e162a9242f68021eee82e68d56&tags="+"running"+"&format=json&nojsoncallback=1",function(data){
+         var url = "https://farm"+ data.photos.photo[0].farm + ".staticflickr.com/"+ data.photos.photo[0].server+ "/"+ data.photos.photo[0].id+"_"+data.photos.photo[0].secret+".jpg"; 
+         console.log(url);
+         $('.image').attr('src', url);
+      var url = "https://farm"+ data.photos.photo[1].farm + ".staticflickr.com/"+ data.photos.photo[1].server+ "/"+ data.photos.photo[1].id+"_"+data.photos.photo[1].secret+".jpg"; 
+         console.log(url);
+         $('.image2').attr('src', url);
+          var url = "https://farm"+ data.photos.photo[2].farm + ".staticflickr.com/"+ data.photos.photo[2].server+ "/"+ data.photos.photo[2].id+"_"+data.photos.photo[2].secret+".jpg"; 
+         console.log(url);
+         $('.image3').attr('src', url);
+          var url = "https://farm"+ data.photos.photo[3].farm + ".staticflickr.com/"+ data.photos.photo[3].server+ "/"+ data.photos.photo[3].id+"_"+data.photos.photo[3].secret+".jpg"; 
+         console.log(url);
+         $('.image4').attr('src', url);
+});
         </script>
     <script src="https://apis.google.com/js/client.js?onload=handleClientLoad" type="text/javascript"></script>
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+    <nav class="navbar navbar-inverse navbar-fixed-up" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Google Calendar API</a>
+                <a class="navbar-brand" href="#">Events Calendar</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="#">Simple Way to embed you calendar</a>
+                        <a href="#">Track your events in a simple way</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
+    
     <!-- Page Content -->
     <div class="container">
         <div class="row">
@@ -275,45 +298,94 @@
             <div class="col-md-10 col-sm-10 col-xs-12">
                 <div class="panel panel-danger" id="result-panel">
                     <div class="panel-heading">
-                        <h1>
-                            My Calendar</h1>
+                        <h1>My Calendar</h1>
                         <h3 class="panel-title" id="result-title">
                             Application Not Authorized</h3>
                         &nbsp;
-                        <p>
-                            Insert Event into Public Calendar&hellip;</p>
+                        <p>Insert Event into Public Calendar&hellip;</p>
                     </div>
                 </div>
-                       <!--  <input id="txtEventDetails" type="text" /> -->
                 
-                Name of event to be delete: <input type="text" name="event_title" id="event_title" placeholder="event title">     
-                <button id="btnDeleteEvents" class="btn btn-primary" onclick="deleteEvent(document.getElementById('event_title').value);">
-                    Delete Events</button><br><br>
-                Name of event to be update: <input type="text" name="event_title1" id="event_title1" placeholder="event title">
-                New Location for event: <input type="text" name="newLocation" id="newLocation" placeholder="New Location">     
-                <button id="btnUpdateEvents" class="btn btn-primary" onclick="updateEvent(document.getElementById('event_title1').value,document.getElementById('newLocation').value);">
-                    Update Events</button><br><br>
-
-                Date: <input type="text" name="day" id="day" placeholder="DD"><input type="text" name="month" id="month" placeholder="MM"><input type="text" name="year" id="year" placeholder="YYYY">
-            
-                <button id="btnShowEvents" class="btn btn-primary" onclick="showEvent(document.getElementById('year').value,
-                document.getElementById('month').value,document.getElementById('day').value);">
-                    Show Events</button>
-                 <button id="btnCreateEvents" class="btn btn-primary" >
-                    Create Events</button> <br>   
-                <div id="event-response">
-                 <h1>New Events: </h1>
+                       <!--  <input id="txtEventDetails" type="text" /> -->
+                      
+                       <div class="data_input">
+                        <h4 style="display:inline">Date:</h4>
+                        <q>events happened on that day</q>
+                        <br><br>
+                         <input type="text" name="day" id="day" placeholder="DD">
+                         <input type="text" name="month" id="month" placeholder="MM">
+                         <input type="text" name="year" id="year" placeholder="YYYY">
+                         <br>
+                        <button id="btnShowEvents" class="btn btn-primary" onclick="showEvent(document.getElementById('year').value,
+                        document.getElementById('month').value,document.getElementById('day').value);">
+                            Show Events</button>
+                         <button id="btnCreateEvents" class="btn btn-primary" >
+                            Create Events</button>
+                        </div>
+                  <div id="event-response">
+                 <h4>New events around Cairo: </h4>
                     <div id="events">
+                       
                         <ul id="eventsList">
                         </ul>
+                       
                     </div>   
                 </div>
-                <div id="divifm">
-                    <iframe src="https://calendar.google.com/calendar/embed?src=nohawally7%40gmail.com&ctz=Africa%2FCairo" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+            
+                    <div class="data_input">
+                    <h4>Name of event to be delete: </h4>
+                    <input type="text" name="event_title" id="event_title" placeholder="event title">
+                    <button id="btnDeleteEvents" class="btn btn-primary" onclick="deleteEvent(document.getElementById('event_title').value);">
+                        Delete Events</button> 
+                   </div>
+                       
+              <div class="data_input">
+                  <h4>Name of event to be update:</h4>
+                 <input type="text" name="event_title1" id="event_title1" placeholder="event title">
+                
+                <h4>New Location for event:</h4>
+                 <input type="text" name="newLocation" id="newLocation" placeholder="New Location">  
+                   
+                <button id="btnUpdateEvents" class="btn btn-primary" onclick="updateEvent(document.getElementById('event_title1').value,document.getElementById('newLocation').value);">Update Events</button>
                 </div>
+            <div class="data_input">
+                <h4>Create your personal events:</h4>
+                 <h5>Date:</h5>
+                         <input type="text" name="day" id="day" placeholder="DD">
+                         <input type="text" name="month" id="month" placeholder="MM">
+                         <input type="text" name="year" id="year" placeholder="YYYY">
+                 <h5>Event Name</h5>
+                         <input type="text" name="title" id="title" placeholder="event title">
+                 <h5>Event Location</h5>
+                           <input type="text" name="location" id="title" placeholder="location">
+                  <button id="createpersonalevent" class="btn btn-primary" onclick="">Create Event</button>
+                
             </div>
+                  
+                    <div id="divifm">
+                        <iframe src="https://calendar.google.com/calendar/embed?src=nohawally7%40gmail.com&ctz=Africa%2FCairo" style="border: 0" width="800" height="600" frameborder="0" scrolling="no" ></iframe>
+                    </div>
+                   </div>
+                
+                <div class="images">
+                   <div class="col-md-3">
+                    <img class="image">
+                    </div>
+                    <div class="col-md-3">
+                    <img class="image2" >
+                    </div>
+                      <div class="col-md-3">
+                    <img class="image3" >
+                    </div>
+                      <div class="col-md-3">
+                    <img class="image4" >
+                          </div>
+                </div>
+                   
+                
+               
         </div>
     </div>
-<script src="http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=f018661ad69c5d52b0f39f7b39da03bf&tags=lion&per_page=5&format=json"> </script>
+
 </body>
 </html>
