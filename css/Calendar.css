@@ -4,7 +4,46 @@ body {
 	margin-bottom: 50px;
 	background: none;
 }
+.panel-heading{
+    text-align: center;
+}
+.data_input input{
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    height: 30px;
+    
 
+}
+.data_input h4{
+    color:cadetblue;
+}
+h4{
+    color:cadetblue;
+}
+.data_input button{
+     height: 30px;
+     padding: 5px;
+    width: 120px;
+    margin-right: 10px;
+     margin: 10px;
+}
+
+#event-response #events{
+    height: 70px;
+    width: 500px;
+    background-color: white;
+}
+.image, .image2, .image3, .image4{
+    height: 250px;
+    margin: 5px;
+    margin-top: 20px;
+}
+
+#divifm {
+    margin: auto;
+   align-content: center;
+}
 .full {
   background: url(calendar1.jpg) no-repeat center center fixed; 
   
