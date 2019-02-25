@@ -71,7 +71,7 @@
             gapi.client.load('calendar', 'v3', function () {                    // load the calendar api (version 3)
                 var request = gapi.client.calendar.events.insert
                 ({
-                    'calendarId': 'nohawally7@gmail.com', // calendar ID
+                    'calendarId': 'yosraradwan99@gmail.com', // calendar ID
                     "resource": resource                            // pass event details with api call
                 });
                  
@@ -136,7 +136,7 @@
                  
                 ); // end of forEach     
                     console.log(data);
-                    jsonFlickrApi(rsp);
+                    //jsonFlickrApi(rsp);
                 },
                     error: function() { alert('Failed!'); }
                 })
@@ -149,7 +149,7 @@
        function deleteEvent(event_title) {
         $(document).ready(function(){
             $.ajax({
-                url: 'https://www.googleapis.com/calendar/v3/calendars/nohawally7@gmail.com/events?key=' + apiKey,
+                url: 'https://www.googleapis.com/calendar/v3/calendars/yosraradwan99@gmail.com/events?key=' + apiKey,
                 type: 'GET',
                 crossDomain: true,
                 dataType: 'jsonp',
@@ -160,7 +160,7 @@
                         if(element.summary==event_title){
                              gapi.client.load('calendar', 'v3', function() {
                             var request = gapi.client.calendar.events.delete({
-                                'calendarId': 'nohawally7@gmail.com',
+                                'calendarId': 'yosraradwan99@gmail.com',
                                 'eventId': element.id
                             });
                             request.execute(function(response) {
@@ -185,7 +185,7 @@
        function updateEvent(event_title,newLocation) {
         $(document).ready(function(){
             $.ajax({
-                url: 'https://www.googleapis.com/calendar/v3/calendars/nohawally7@gmail.com/events?key=' + apiKey,
+                url: 'https://www.googleapis.com/calendar/v3/calendars/yosraradwan99@gmail.com/events?key=' + apiKey,
                 type: 'GET',
                 crossDomain: true,
                 dataType: 'jsonp',
@@ -200,7 +200,7 @@
                             
                             gapi.client.load('calendar', 'v3', function() {
                             var request = gapi.client.calendar.events.update({
-                                'calendarId': 'nohawally7@gmail.com',
+                                'calendarId': 'yosraradwan99@gmail.com',
                                 'eventId': element.id,
                                 'resource': event
                             });
@@ -228,33 +228,25 @@
  
         
         // Create your own event
-//        function createEvent(event_title, newlocation){
-//        var event = {
-//          'summary': event_title,
-//          'location': newlocation,
-//          'start': {
-//            'dateTime': dayOfevent,
-//          },
-//          'end': {
-//            'dateTime': dayOfevent;
-//          }
-//        };
-//
-//        var request = gapi.client.calendar.events.insert({
-//          'calendarId': 'nohawally7@gmail.com',
-//          'resource': event
-//        });
-//
-//        request.execute(function(event) {
-//          appendPre('Event created: ' + event.htmlLink);
-//        });
-//        }
-//        
-             $.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=8452b4e162a9242f68021eee82e68d56&tags="+"running"+"&format=json&nojsoncallback=1",function(data){
+       function createyourEvent(year,month,day,title, location){
+        var dayOfevent=year+'-'+month+'-'+day+'T09:00:00-07:00';
+       var resource1 = {
+                    "summary": title,
+                    "start": {
+                        "dateTime": dayOfevent
+                    },
+                    "end": {
+                        "dateTime": dayOfevent
+                    },
+                    "location":location,
+                    
+                    };
+                    
+        $.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=49cda8a354931499fe09ef24c44737e7&tags="+title+"&format=json&nojsoncallback=1",function(data){
          var url = "https://farm"+ data.photos.photo[0].farm + ".staticflickr.com/"+ data.photos.photo[0].server+ "/"+ data.photos.photo[0].id+"_"+data.photos.photo[0].secret+".jpg"; 
          console.log(url);
          $('.image').attr('src', url);
-      var url = "https://farm"+ data.photos.photo[1].farm + ".staticflickr.com/"+ data.photos.photo[1].server+ "/"+ data.photos.photo[1].id+"_"+data.photos.photo[1].secret+".jpg"; 
+        var url = "https://farm"+ data.photos.photo[1].farm + ".staticflickr.com/"+ data.photos.photo[1].server+ "/"+ data.photos.photo[1].id+"_"+data.photos.photo[1].secret+".jpg"; 
          console.log(url);
          $('.image2').attr('src', url);
           var url = "https://farm"+ data.photos.photo[2].farm + ".staticflickr.com/"+ data.photos.photo[2].server+ "/"+ data.photos.photo[2].id+"_"+data.photos.photo[2].secret+".jpg"; 
@@ -263,7 +255,35 @@
           var url = "https://farm"+ data.photos.photo[3].farm + ".staticflickr.com/"+ data.photos.photo[3].server+ "/"+ data.photos.photo[3].id+"_"+data.photos.photo[3].secret+".jpg"; 
          console.log(url);
          $('.image4').attr('src', url);
-});
+        });
+                    
+        var eventResponse = document.getElementById('event-response1');
+           
+            gapi.client.load('calendar', 'v3', function () {                    // load the calendar api (version 3)
+                var request = gapi.client.calendar.events.insert
+                ({
+                    'calendarId': 'yosraradwan99@gmail.com', // calendar ID
+                    "resource": resource1                            // pass event details with api call
+                });
+                 
+                // handle the response from our api call
+                request.execute(function (resp) {
+                    if (resp.status == 'confirmed') {
+                        eventResponse.innerHTML = "Event created successfully. View it <a href='" + resp.htmlLink + "'>online here</a>.";
+                        eventResponse.className += ' panel-success';
+                        refreshICalendarframe();
+                    } else {
+                        document.getElementById('event-response1').innerHTML = "There was a problem. Reload page and try again.";
+                        eventResponse.className += ' panel-danger';
+                    }
+                });
+            });
+          
+        
+        
+    
+}//end of function create your own event
+
         </script>
     <script src="https://apis.google.com/js/client.js?onload=handleClientLoad" type="text/javascript"></script>
 </head>
@@ -351,19 +371,19 @@
             <div class="data_input">
                 <h4>Create your personal events:</h4>
                  <h5>Date:</h5>
-                         <input type="text" name="day" id="day" placeholder="DD">
-                         <input type="text" name="month" id="month" placeholder="MM">
-                         <input type="text" name="year" id="year" placeholder="YYYY">
+                         <input type="text" name="day1" id="day1" placeholder="DD">
+                         <input type="text" name="month1" id="month1" placeholder="MM">
+                         <input type="text" name="year1" id="year1" placeholder="YYYY">
                  <h5>Event Name</h5>
-                         <input type="text" name="title" id="title" placeholder="event title">
+                         <input type="text" name="title1" id="title1" placeholder="event title">
                  <h5>Event Location</h5>
-                           <input type="text" name="location" id="title" placeholder="location">
-                  <button id="createpersonalevent" class="btn btn-primary" onclick="">Create Event</button>
-                
+                           <input type="text" name="location1" id="location1" placeholder="location">
+                  <button id="createpersonalevent" class="btn btn-primary" onclick="createyourEvent(document.getElementById('year1').value,document.getElementById('month1').value,document.getElementById('day1').value,document.getElementById('title1').value,document.getElementById('location1').value)">Create Event</button>
+                <div id="event-response1">
             </div>
                   
                     <div id="divifm">
-                        <iframe src="https://calendar.google.com/calendar/embed?src=nohawally7%40gmail.com&ctz=Africa%2FCairo" style="border: 0" width="800" height="600" frameborder="0" scrolling="no" ></iframe>
+                        <iframe src="https://calendar.google.com/calendar/embed?src=yosraradwan99@gmail.com&ctz=Africa%2FCairo" style="border: 0" width="800" height="600" frameborder="0" scrolling="no" ></iframe>
                     </div>
                    </div>
                 
