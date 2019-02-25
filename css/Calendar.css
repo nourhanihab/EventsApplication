@@ -38,8 +38,12 @@ h4{
     height: 250px;
     margin: 5px;
     margin-top: 20px;
+    width: 250px;
 }
-
+.images{
+    margin: auto;
+    margin-left: -150px;
+}
 #divifm {
     margin: auto;
    align-content: center;
