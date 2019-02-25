@@ -1,0 +1,37 @@
+A read me file for you to use our project
+-----------------------------------------
+Project made in JavaScript language
+-----------------------------------------
+What is the Project? 
+	The project is a simple integration of three important APIs that could professionally help you.
+you first check the calender. if you're bored and need to go out. you can check the empty day on your calender and check if there are any upcoming events.
+you can also delete or update events. you can create your own personal event. just enter the day, event name and the location.
+you can get some photos about the event you'd like to create. You can enter name,date and event. then, we'll bring you some clear photos for this event (e.g marathons).
+
+Pre:
+- You need to install appserv, apache or nginx
+- You need to create an account on https://console.developers.google.com
+- Get the API key and the client ID from authorization
+- Create Eventful account
+- Get or update the API key
+- Get Or Update the API key of Flickr
+
+Used APIS:
+- Google Calender
+Services: GET, POST, PUT, DELETE
+
+- Eventful
+Services: GET
+
+- Flicker
+Services: SEARCH
+
+How did we integrate the APIS:
+	First, google calender. We authorized our google calender not the public one. 
+It was good for us to use a jquery "ajax". and for you to know that what we get from the API is something in Json format.
+Second, eventful. We give it the date and its responsibility is to find what events happened that day in a specific location.
+the location we mentioned is Cairo, Egypt. Eventful you just make an account and they support thier API key.
+Third, Flicker. You just enter your name, date and event. it will appear in the calender and 4 photos will appear on the website.
+
+----------------------------------------------
+Github repo: https://github.com/nourhanihab/EventsApplication.git
